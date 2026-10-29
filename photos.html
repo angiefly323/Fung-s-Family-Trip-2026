@@ -233,32 +233,59 @@
     </nav>
 
     <!-- 互動 JavaScript 邏輯 -->
-    <script>
-        function handleUpload(event) {
-            event.preventDefault();
-            const day = document.getElementById('upload-day').value;
-            const uploader = document.getElementById('upload-uploader').value;
-            const fileInput = document.getElementById('upload-file');
-            
-            if (fileInput.files.length === 0) {
-                alert('請先選擇至少一張照片或影片！');
-                return;
-            }
+   <script>
+    // 請將底部的引號內換成你剛剛從 Google Apps Script 複製的「網頁應用程式網址」
+    const WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
-            alert(`成功！已將 ${fileInput.files.length} 個檔案上傳至 [${day}]（上傳者：${uploader}）。稍後將自動串接 Google Cloud Storage 儲存！`);
-            fileInput.value = '';
+    async function handleUpload(event) {
+        event.preventDefault();
+        const day = document.getElementById('upload-day').value;
+        const uploader = document.getElementById('upload-uploader').value;
+        const fileInput = document.getElementById('upload-file');
+        
+        if (fileInput.files.length === 0) {
+            alert('請先選擇至少一張照片或影片！');
+            return;
         }
 
-        function filterPhotos(day) {
-            const items = document.querySelectorAll('.photo-item');
-            items.forEach(item => {
-                if (day === 'all' || item.getAttribute('data-day') === day) {
-                    item.style.display = 'block';
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        // 顯示上傳中提示
+        alert('正在將檔案上傳至 Google 雲端，請稍候...');
+
+        reader.onload = async function () {
+            const base64Data = reader.result.split(',')[1]; // 取得 Base64 資料
+            const payload = {
+                fileName: file.name,
+                mimeType: file.type,
+                fileData: base64Data,
+                uploader: uploader,
+                day: day
+            };
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    alert(`✨ 上傳成功！已存入 Google 雲端與試算表。`);
+                    fileInput.value = '';
+                    location.reload(); // 重新整理頁面
                 } else {
-                    item.style.display = 'none';
+                    alert('上傳失敗，請稍後再試：' + result.message);
                 }
-            });
-        }
-    </script>
+            } catch (err) {
+                console.error(err);
+                alert('上傳發生錯誤，請檢查網路連線。');
+            }
+        };
+
+        reader.readAsDataURL(file);
+    }
+</script>
 </body>
 </html>
