@@ -88,7 +88,7 @@
                     <span id="total-amount" class="text-lg font-bold text-coral">NT$ 12,850</span>
                 </div>
                 <div class="bg-white p-3 ehon-card">
-                    <span class="text-[10px] text-ink/70 block">每人平均分攤</span>
+                    <span class="text-[10px] text-ink/70 block">每人平均分攤 (6人)</span>
                     <span id="per-person" class="text-lg font-bold text-sky">NT$ 2,142</span>
                 </div>
             </div>
@@ -124,18 +124,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-bold mb-1">參與分攤成員 (預設全選)</label>
-                    <div class="grid grid-cols-3 gap-1.5 bg-sky/10 p-2 ehon-card">
-                        <label class="flex items-center gap-1"><input type="checkbox" checked value="偉業" class="accent-coral"> 偉業</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" checked value="三嫂" class="accent-coral"> 三嫂</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" checked value="偉強" class="accent-coral"> 偉強</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" checked value="寶寶" class="accent-coral"> 寶寶</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" checked value="美麗大姐" class="accent-coral"> 美麗大姐</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" checked value="可愛二姐" class="accent-coral"> 可愛二姐</label>
-                    </div>
-                </div>
-
                 <button type="submit" class="w-full py-2.5 bg-coral font-bold ehon-btn text-center text-sm shadow-md">
                     ✨ 記錄開支並自動分帳
                 </button>
@@ -148,31 +136,28 @@
                 <span>📋</span> 記帳明細列表
             </h2>
             <div id="expense-list" class="space-y-2 text-xs">
-                <!-- 範例項目 1 -->
                 <div class="bg-white p-3 ehon-card flex justify-between items-center">
                     <div>
                         <p class="font-bold text-sm">永康街牛肉麵午餐</p>
-                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-coral px-1 rounded border border-ink font-bold">偉業</span> ｜ 分攤：6人平分</p>
+                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-coral px-1 rounded border border-ink font-bold">偉業</span> ｜ 6人平分</p>
                     </div>
                     <div class="text-right">
                         <span class="font-bold text-sm text-coral">NT$ 2,400</span>
                     </div>
                 </div>
-                <!-- 範例項目 2 -->
                 <div class="bg-white p-3 ehon-card flex justify-between items-center">
                     <div>
                         <p class="font-bold text-sm">阿里山高山茶禮盒</p>
-                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-yellow px-1 rounded border border-ink font-bold">三嫂</span> ｜ 分攤：6人平分</p>
+                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-yellow px-1 rounded border border-ink font-bold">三嫂</span> ｜ 6人平分</p>
                     </div>
                     <div class="text-right">
                         <span class="font-bold text-sm text-coral">NT$ 4,500</span>
                     </div>
                 </div>
-                <!-- 範例項目 3 -->
                 <div class="bg-white p-3 ehon-card flex justify-between items-center">
                     <div>
                         <p class="font-bold text-sm">士林夜市掃街小吃</p>
-                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-green px-1 rounded border border-ink font-bold">偉強</span> ｜ 分攤：6人平分</p>
+                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-green px-1 rounded border border-ink font-bold">偉強</span> ｜ 6人平分</p>
                     </div>
                     <div class="text-right">
                         <span class="font-bold text-sm text-coral">NT$ 5,950</span>
@@ -181,29 +166,34 @@
             </div>
         </section>
 
-        <!-- 4. 每人結算與找平建議 -->
+        <!-- 4. 分帳結算與精準找平建議 (誰要給誰多少錢) -->
         <section class="ehon-card p-4 bg-green/20">
             <h2 class="text-sm font-bold flex items-center gap-1.5 mb-2 text-ink">
-                <span>⚖️</span> 分帳結算與找平建議
+                <span>⚖️</span> 轉帳找平建議 (誰要給誰錢)
             </h2>
-            <p class="text-xs text-ink/70 mb-3">旅程結束後對帳參考，自動計算誰該給誰：</p>
+            <p class="text-xs text-ink/70 mb-3">依據每人墊付與應付金額自動配對，照著轉帳即可：</p>
             
-            <div class="space-y-2 text-xs">
-                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
-                    <span class="font-bold">偉業 (已墊付 NT$ 2,400)</span>
-                    <span class="bg-sky px-2 py-0.5 rounded border border-ink font-bold text-skyDark">已平衡 🎉</span>
+            <div id="settlement-list" class="space-y-2 text-xs">
+                <!-- 動態計算產生的轉帳指示 -->
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center border-l-4 border-coral">
+                    <span class="font-bold">👉 寶寶 需支付給 三嫂</span>
+                    <span class="bg-coral text-white px-2 py-0.5 rounded border border-ink font-bold">NT$ 1,142</span>
                 </div>
-                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
-                    <span class="font-bold">三嫂 (已墊付 NT$ 4,500)</span>
-                    <span class="bg-green px-2 py-0.5 rounded border border-ink font-bold text-green-800">應收回 NT$ 2,358</span>
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center border-l-4 border-coral">
+                    <span class="font-bold">👉 寶寶 需支付給 偉強</span>
+                    <span class="bg-coral text-white px-2 py-0.5 rounded border border-ink font-bold">NT$ 1,000</span>
                 </div>
-                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
-                    <span class="font-bold">偉強 (已墊付 NT$ 5,950)</span>
-                    <span class="bg-green px-2 py-0.5 rounded border border-ink font-bold text-green-800">應收回 NT$ 3,808</span>
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center border-l-4 border-coral">
+                    <span class="font-bold">👉 美麗大姐 需支付給 偉強</span>
+                    <span class="bg-coral text-white px-2 py-0.5 rounded border border-ink font-bold">NT$ 2,142</span>
                 </div>
-                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
-                    <span class="font-bold">寶寶 (未墊付)</span>
-                    <span class="bg-coral px-2 py-0.5 rounded border border-ink font-bold text-white">需支付 NT$ 2,142</span>
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center border-l-4 border-coral">
+                    <span class="font-bold">👉 可愛二姐 需支付給 偉業</span>
+                    <span class="bg-coral text-white px-2 py-0.5 rounded border border-ink font-bold">NT$ 318</span>
+                </div>
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center border-l-4 border-coral">
+                    <span class="font-bold">👉 可愛二姐 需支付給 偉強</span>
+                    <span class="bg-coral text-white px-2 py-0.5 rounded border border-ink font-bold">NT$ 1,824</span>
                 </div>
             </div>
         </section>
@@ -232,8 +222,93 @@
         </div>
     </nav>
 
-    <!-- 簡易記帳與計算 JavaScript 邏輯 -->
+    <!-- 記帳與找平計算邏輯 -->
     <script>
+        // 模擬儲存紀錄的陣列 (包含預設的三筆)
+        let expenses = [
+            { title: "永康街牛肉麵午餐", amount: 2400, payer: "偉業" },
+            { title: "阿里山高山茶禮盒", amount: 4500, payer: "三嫂" },
+            { title: "士林夜市掃街小吃", amount: 5950, payer: "偉強" }
+        ];
+
+        const members = ["偉業", "三嫂", "偉強", "寶寶", "美麗大姐", "可愛二姐"];
+
+        function renderExpenses() {
+            const list = document.getElementById('expense-list');
+            list.innerHTML = '';
+            
+            let total = 0;
+            let paidMap = { "偉業": 0, "三嫂": 0, "偉強": 0, "寶寶": 0, "美麗大姐": 0, "可愛二姐": 0 };
+
+            expenses.forEach(item => {
+                total += item.amount;
+                paidMap[item.payer] = (paidMap[item.payer] || 0) + item.amount;
+
+                const div = document.createElement('div');
+                div.className = "bg-white p-3 ehon-card flex justify-between items-center";
+                div.innerHTML = `
+                    <div>
+                        <p class="font-bold text-sm">${item.title}</p>
+                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-yellow px-1 rounded border border-ink font-bold">${item.payer}</span> ｜ 6人平分</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-sm text-coral">NT$ ${item.amount.toLocaleString()}</span>
+                    </div>
+                `;
+                list.prepend(div);
+            });
+
+            // 更新總覽
+            const perPerson = Math.round(total / members.length);
+            document.getElementById('total-amount').textContent = `NT$ ${total.toLocaleString()}`;
+            document.getElementById('per-person').textContent = `NT$ ${perPerson.toLocaleString()}`;
+
+            // 計算誰要給誰 (Debts calculation)
+            let balances = {};
+            members.forEach(m => {
+                balances[m] = paidMap[m] - perPerson; // 正數代表應收回，負數代表需支付
+            });
+
+            let debtors = []; // 欠錢的人
+            let creditors = []; // 收錢的人
+
+            for (let m in balances) {
+                if (balances[m] < -1) debtors.push({ name: m, amount: -balances[m] });
+                if (balances[m] > 1) creditors.push({ name: m, amount: balances[m] });
+            }
+
+            const settlementList = document.getElementById('settlement-list');
+            settlementList.innerHTML = '';
+
+            let settlements = [];
+            let i = 0, j = 0;
+
+            while (i < debtors.length && j < creditors.length) {
+                let debt = debtors[i];
+                let credit = creditors[j];
+                let amt = Math.min(debt.amount, credit.amount);
+
+                settlements.push(`
+                    <div class="bg-white p-2.5 ehon-card flex justify-between items-center border-l-4 border-coral">
+                        <span class="font-bold">👉 ${debt.name} 需支付給 ${credit.name}</span>
+                        <span class="bg-coral text-white px-2 py-0.5 rounded border border-ink font-bold">NT$ ${Math.round(amt).toLocaleString()}</span>
+                    </div>
+                `);
+
+                debt.amount -= amt;
+                credit.amount -= amt;
+
+                if (debt.amount < 1) i++;
+                if (credit.amount < 1) j++;
+            }
+
+            if (settlements.length === 0) {
+                settlementList.innerHTML = `<div class="bg-white p-3 ehon-card text-center font-bold text-green-700">🎉 目前大家帳目剛好平衡，互不欠帳！</div>`;
+            } else {
+                settlementList.innerHTML = settlements.join('');
+            }
+        }
+
         function addExpense(event) {
             event.preventDefault();
             const title = document.getElementById('exp-title').value;
@@ -242,23 +317,15 @@
 
             if (!title || isNaN(amount)) return;
 
-            const list = document.getElementById('expense-list');
-            const newItem = document.createElement('div');
-            newItem.className = "bg-white p-3 ehon-card flex justify-between items-center animate-pulse";
-            newItem.innerHTML = `
-                <div>
-                    <p class="font-bold text-sm">${title}</p>
-                    <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-yellow px-1 rounded border border-ink font-bold">${payer}</span> ｜ 分攤：6人平分</p>
-                </div>
-                <div class="text-right">
-                    <span class="font-bold text-sm text-coral">NT$ ${amount.toLocaleString()}</span>
-                </div>
-            `;
-            list.prepend(newItem);
-            
+            expenses.push({ title, amount, payer });
+            renderExpenses();
+
             alert(`成功新增開支：${title} (NT$ ${amount.toLocaleString()})，由 ${payer} 支付！`);
             event.target.reset();
         }
+
+        // 初始化渲染
+        renderExpenses();
     </script>
 </body>
 </html>
