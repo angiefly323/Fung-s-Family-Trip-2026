@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>馮氏台灣遊 2026 - 支出紀錄與分帳</title>
+    <!-- 引入 Google Fonts: Huninn (jf open 粉圓體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+Hei+HK:wght@450&family=jf+open+huninn&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#FFFCF6',
+                        ink: '#3E3A39',
+                        coral: '#F2A497',
+                        yellow: '#F6D27A',
+                        sky: '#A8D3E6',
+                        green: '#B9DAA5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'jf open huninn', 'Chiron Hei HK', sans-serif;
+            background-color: #FFFCF6;
+            color: #3E3A39;
+        }
+
+        /* 3px 墨灰粗線框 + 大圓角 */
+        .ehon-card {
+            background-color: #FFFFFF;
+            border: 3px solid #3E3A39;
+            border-radius: 20px;
+            box-shadow: 4px 4px 0px #3E3A39;
+        }
+
+        .ehon-btn {
+            border: 3px solid #3E3A39;
+            border-radius: 16px;
+            box-shadow: 3px 3px 0px #3E3A39;
+            transition: all 0.1s ease;
+        }
+        .ehon-btn:active, .ehon-btn.active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #3E3A39;
+        }
+
+        /* 減少動態效果支援 */
+        @media (prefers-reduced-motion: reduce) {
+            .ehon-btn {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body class="pb-28">
+
+    <!-- 頂端固定選單 (Top Navbar) -->
+    <nav class="sticky top-0 z-50 bg-[#FFFCF6]/95 backdrop-blur-sm border-b-3 border-[#3E3A39] px-4 py-3">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <span class="font-bold text-base tracking-wider bg-yellow px-3 py-1 ehon-btn text-xs">
+                💰 支出紀錄與分帳
+            </span>
+            <div class="flex gap-2 text-xs font-bold">
+                <a href="index.html" class="px-2.5 py-1 bg-paper ehon-btn opacity-70 hover:opacity-100">首頁</a>
+                <a href="schedule.html" class="px-2.5 py-1 bg-sky ehon-btn opacity-70 hover:opacity-100">行程</a>
+                <a href="photos.html" class="px-2.5 py-1 bg-green ehon-btn opacity-70 hover:opacity-100">照片</a>
+                <a href="expenses.html" class="px-2.5 py-1 bg-yellow ehon-btn">記帳</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
+
+        <!-- 1. 總覽與快速統計卡片 -->
+        <section class="ehon-card p-4 bg-yellow/20">
+            <h2 class="text-sm font-bold flex items-center gap-1.5 mb-2 text-ink">
+                <span>📊</span> 旅費總覽 (台幣 TWD)
+            </h2>
+            <div class="grid grid-cols-2 gap-3 text-center">
+                <div class="bg-white p-3 ehon-card">
+                    <span class="text-[10px] text-ink/70 block">總支出金額</span>
+                    <span id="total-amount" class="text-lg font-bold text-coral">NT$ 12,850</span>
+                </div>
+                <div class="bg-white p-3 ehon-card">
+                    <span class="text-[10px] text-ink/70 block">每人平均分攤</span>
+                    <span id="per-person" class="text-lg font-bold text-sky">NT$ 2,142</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 新增支出表單 (Mark 數) -->
+        <section class="ehon-card p-4 bg-paper">
+            <h2 class="text-sm font-bold flex items-center gap-1.5 mb-3 text-ink">
+                <span>✍️</span> 新增一筆開支 (Mark 數)
+            </h2>
+            
+            <form onsubmit="addExpense(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">消費項目名稱</label>
+                    <input type="text" id="exp-title" placeholder="例如：永康街牛肉麵午餐" required class="w-full p-2 bg-sky/10 ehon-btn outline-none font-bold">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold mb-1">金額 (TWD)</label>
+                        <input type="number" id="exp-amount" placeholder="1500" required class="w-full p-2 bg-sky/10 ehon-btn outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">付款人</label>
+                        <select id="exp-payer" class="w-full p-2 bg-sky/10 ehon-btn outline-none font-bold">
+                            <option value="偉業">偉業</option>
+                            <option value="三嫂">三嫂</option>
+                            <option value="偉強">偉強</option>
+                            <option value="寶寶">寶寶</option>
+                            <option value="美麗大姐">美麗大家姐</option>
+                            <option value="可愛二姐">可愛二家姐</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1">參與分攤成員 (預設全選)</label>
+                    <div class="grid grid-cols-3 gap-1.5 bg-sky/10 p-2 ehon-card">
+                        <label class="flex items-center gap-1"><input type="checkbox" checked value="偉業" class="accent-coral"> 偉業</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" checked value="三嫂" class="accent-coral"> 三嫂</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" checked value="偉強" class="accent-coral"> 偉強</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" checked value="寶寶" class="accent-coral"> 寶寶</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" checked value="美麗大姐" class="accent-coral"> 美麗大姐</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" checked value="可愛二姐" class="accent-coral"> 可愛二姐</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-coral font-bold ehon-btn text-center text-sm shadow-md">
+                    ✨ 記錄開支並自動分帳
+                </button>
+            </form>
+        </section>
+
+        <!-- 3. 支出明細列表 -->
+        <section class="ehon-card p-4 bg-sky/20">
+            <h2 class="text-sm font-bold flex items-center gap-1.5 mb-3 text-ink">
+                <span>📋</span> 記帳明細列表
+            </h2>
+            <div id="expense-list" class="space-y-2 text-xs">
+                <!-- 範例項目 1 -->
+                <div class="bg-white p-3 ehon-card flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-sm">永康街牛肉麵午餐</p>
+                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-coral px-1 rounded border border-ink font-bold">偉業</span> ｜ 分攤：6人平分</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-sm text-coral">NT$ 2,400</span>
+                    </div>
+                </div>
+                <!-- 範例項目 2 -->
+                <div class="bg-white p-3 ehon-card flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-sm">阿里山高山茶禮盒</p>
+                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-yellow px-1 rounded border border-ink font-bold">三嫂</span> ｜ 分攤：6人平分</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-sm text-coral">NT$ 4,500</span>
+                    </div>
+                </div>
+                <!-- 範例項目 3 -->
+                <div class="bg-white p-3 ehon-card flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-sm">士林夜市掃街小吃</p>
+                        <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-green px-1 rounded border border-ink font-bold">偉強</span> ｜ 分攤：6人平分</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-sm text-coral">NT$ 5,950</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 每人結算與找平建議 -->
+        <section class="ehon-card p-4 bg-green/20">
+            <h2 class="text-sm font-bold flex items-center gap-1.5 mb-2 text-ink">
+                <span>⚖️</span> 分帳結算與找平建議
+            </h2>
+            <p class="text-xs text-ink/70 mb-3">旅程結束後對帳參考，自動計算誰該給誰：</p>
+            
+            <div class="space-y-2 text-xs">
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
+                    <span class="font-bold">偉業 (已墊付 NT$ 2,400)</span>
+                    <span class="bg-sky px-2 py-0.5 rounded border border-ink font-bold text-skyDark">已平衡 🎉</span>
+                </div>
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
+                    <span class="font-bold">三嫂 (已墊付 NT$ 4,500)</span>
+                    <span class="bg-green px-2 py-0.5 rounded border border-ink font-bold text-green-800">應收回 NT$ 2,358</span>
+                </div>
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
+                    <span class="font-bold">偉強 (已墊付 NT$ 5,950)</span>
+                    <span class="bg-green px-2 py-0.5 rounded border border-ink font-bold text-green-800">應收回 NT$ 3,808</span>
+                </div>
+                <div class="bg-white p-2.5 ehon-card flex justify-between items-center">
+                    <span class="font-bold">寶寶 (未墊付)</span>
+                    <span class="bg-coral px-2 py-0.5 rounded border border-ink font-bold text-white">需支付 NT$ 2,142</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 底部導覽列 (Directory) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#FFFCF6] border-t-3 border-[#3E3A39] py-2 px-6 z-50">
+        <div class="max-w-md mx-auto flex justify-between items-center text-xs font-bold">
+            <a href="index.html" class="flex flex-col items-center p-1 hover:bg-coral/50 ehon-btn px-4">
+                <span>🏠</span>
+                <span class="mt-0.5">首頁</span>
+            </a>
+            <a href="schedule.html" class="flex flex-col items-center p-1 hover:bg-sky/50 ehon-btn px-4">
+                <span>🗺️</span>
+                <span class="mt-0.5">行程</span>
+            </a>
+            <a href="photos.html" class="flex flex-col items-center p-1 hover:bg-green/50 ehon-btn px-4">
+                <span>📸</span>
+                <span class="mt-0.5">照片集</span>
+            </a>
+            <a href="expenses.html" class="flex flex-col items-center p-1 bg-yellow ehon-btn px-4">
+                <span>💰</span>
+                <span class="mt-0.5">記帳</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 簡易記帳與計算 JavaScript 邏輯 -->
+    <script>
+        function addExpense(event) {
+            event.preventDefault();
+            const title = document.getElementById('exp-title').value;
+            const amount = parseFloat(document.getElementById('exp-amount').value);
+            const payer = document.getElementById('exp-payer').value;
+
+            if (!title || isNaN(amount)) return;
+
+            const list = document.getElementById('expense-list');
+            const newItem = document.createElement('div');
+            newItem.className = "bg-white p-3 ehon-card flex justify-between items-center animate-pulse";
+            newItem.innerHTML = `
+                <div>
+                    <p class="font-bold text-sm">${title}</p>
+                    <p class="text-[10px] text-ink/70 mt-0.5">付款人：<span class="bg-yellow px-1 rounded border border-ink font-bold">${payer}</span> ｜ 分攤：6人平分</p>
+                </div>
+                <div class="text-right">
+                    <span class="font-bold text-sm text-coral">NT$ ${amount.toLocaleString()}</span>
+                </div>
+            `;
+            list.prepend(newItem);
+            
+            alert(`成功新增開支：${title} (NT$ ${amount.toLocaleString()})，由 ${payer} 支付！`);
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>

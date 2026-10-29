@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>馮氏台灣遊 2026 - 行程</title>
+    <!-- 引入 Google Fonts: Huninn (jf open 粉圓體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+Hei+HK:wght@450&family=jf+open+huninn&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#FFFCF6',
+                        ink: '#3E3A39',
+                        coral: '#F2A497',
+                        yellow: '#F6D27A',
+                        sky: '#A8D3E6',
+                        green: '#B9DAA5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'jf open huninn', 'Chiron Hei HK', sans-serif;
+            background-color: #FFFCF6;
+            color: #3E3A39;
+        }
+
+        /* 3px 墨灰粗線框 + 大圓角 */
+        .ehon-card {
+            background-color: #FFFFFF;
+            border: 3px solid #3E3A39;
+            border-radius: 20px;
+            box-shadow: 4px 4px 0px #3E3A39;
+        }
+
+        .ehon-btn {
+            border: 3px solid #3E3A39;
+            border-radius: 16px;
+            box-shadow: 3px 3px 0px #3E3A39;
+            transition: all 0.1s ease;
+        }
+        .ehon-btn:active, .ehon-btn.active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #3E3A39;
+        }
+
+        /* 切換日期時的彈跳動畫 */
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: translateY(6px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-tab {
+            animation: bounceIn 0.3s ease-out forwards;
+        }
+
+        /* 減少動態效果支援 */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-tab {
+                animation: none;
+            }
+            .ehon-btn {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body class="pb-28">
+
+    <!-- 頂端固定選單 (Top Navbar) -->
+    <nav class="sticky top-0 z-50 bg-[#FFFCF6]/95 backdrop-blur-sm border-b-3 border-[#3E3A39] px-4 py-3">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <span class="font-bold text-base tracking-wider bg-sky px-3 py-1 ehon-btn text-xs">
+                🗺️ 每日行程
+            </span>
+            <div class="flex gap-2 text-xs font-bold">
+                <a href="index.html" class="px-2.5 py-1 bg-paper ehon-btn opacity-70 hover:opacity-100">首頁</a>
+                <a href="schedule.html" class="px-2.5 py-1 bg-coral ehon-btn">行程</a>
+                <a href="photos.html" class="px-2.5 py-1 bg-green ehon-btn text-ink opacity-70 hover:opacity-100">照片</a>
+                <a href="expenses.html" class="px-2.5 py-1 bg-yellow ehon-btn text-ink opacity-70 hover:opacity-100">記帳</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
+
+        <!-- 日期切換按鈕列 -->
+        <div class="grid grid-cols-5 gap-1.5 text-center text-xs font-bold">
+            <button onclick="switchDay(1)" id="tab-1" class="py-2 bg-coral ehon-btn active transition-all">Day 1<br><span class="text-[10px] font-normal">11/4</span></button>
+            <button onclick="switchDay(2)" id="tab-2" class="py-2 bg-paper ehon-btn transition-all">Day 2<br><span class="text-[10px] font-normal">11/5</span></button>
+            <button onclick="switchDay(3)" id="tab-3" class="py-2 bg-paper ehon-btn transition-all">Day 3<br><span class="text-[10px] font-normal">11/6</span></button>
+            <button onclick="switchDay(4)" id="tab-4" class="py-2 bg-paper ehon-btn transition-all">Day 4<br><span class="text-[10px] font-normal">11/7</span></button>
+            <button onclick="switchDay(5)" id="tab-5" class="py-2 bg-paper ehon-btn transition-all">Day 5<br><span class="text-[10px] font-normal">11/8</span></button>
+        </div>
+
+        <!-- 行程內容容器 (隨按鈕切換) -->
+        <div id="schedule-content" class="animate-tab">
+            <!-- 內容由 JavaScript 動態填入 -->
+        </div>
+
+    </main>
+
+    <!-- 底部導覽列 (Directory) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#FFFCF6] border-t-3 border-[#3E3A39] py-2 px-6 z-50">
+        <div class="max-w-md mx-auto flex justify-between items-center text-xs font-bold">
+            <a href="index.html" class="flex flex-col items-center p-1 hover:bg-coral/50 ehon-btn px-4">
+                <span>🏠</span>
+                <span class="mt-0.5">首頁</span>
+            </a>
+            <a href="schedule.html" class="flex flex-col items-center p-1 bg-sky ehon-btn px-4">
+                <span>🗺️</span>
+                <span class="mt-0.5">行程</span>
+            </a>
+            <a href="photos.html" class="flex flex-col items-center p-1 hover:bg-green/50 ehon-btn px-4">
+                <span>📸</span>
+                <span class="mt-0.5">照片集</span>
+            </a>
+            <a href="expenses.html" class="flex flex-col items-center p-1 hover:bg-yellow/50 ehon-btn px-4">
+                <span>💰</span>
+                <span class="mt-0.5">支出紀錄</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 行程資料與切換邏輯 -->
+    <script>
+        const scheduleData = {
+            1: {
+                date: "11月4日 (星期三)",
+                title: "Day 1：抵台與市區探索",
+                items: [
+                    { time: "09:00", title: "香港起飛 (HX 282)", desc: "搭乘早機前往台北桃園機場", tag: "✈️ 航班", tagColor: "bg-sky", isMust: false, mapQuery: "Taiwan Taoyuan International Airport" },
+                    { time: "11:30", title: "機場取車處", desc: "辦理自駕租車手續，6人座車輛點檢", tag: "🚗 自駕", tagColor: "bg-yellow", isMust: true, mapQuery: "桃園機場租車" },
+                    { time: "13:00", title: "永康街牛肉麵午餐", desc: "品嚐地道台灣牛肉麵與小菜", tag: "🍲 美食", tagColor: "bg-coral", isMust: true, mapQuery: "永康街牛肉麵" },
+                    { time: "15:30", title: "和逸飯店・台北忠孝館", desc: "辦理入住放行李，稍作休息", tag: "🏨 住宿", tagColor: "bg-green", isMust: false, mapQuery: "COZZI Hotel Taipei Zhongxiao" },
+                    { time: "18:30", title: "士林夜市掃街", desc: "大啖雞排、珍珠奶茶、地瓜球", tag: "🍢 逛街", tagColor: "bg-yellow", isMust: true, mapQuery: "士林夜市" }
+                ]
+            },
+            2: {
+                date: "11月5日 (星期四)",
+                title: "Day 2：出發阿里山仙境",
+                items: [
+                    { time: "08:30", title: "台北出發南下", desc: "自駕沿國道欣賞風景，中途休息站補給", tag: "🚗 自駕", tagColor: "bg-yellow", isMust: false, mapQuery: "國道高速公路" },
+                    { time: "12:30", title: "嘉義午餐・火雞肉飯", desc: "品嚐在地著名嘉義風味美食", tag: "🍲 美食", tagColor: "bg-coral", isMust: true, mapQuery: "嘉義火雞肉飯" },
+                    { time: "15:00", title: "阿里山國家森林遊樂區", desc: "抵達園區，漫步神木群步道吸芬多精", tag: "⛰️ 健行", tagColor: "bg-green", isMust: true, mapQuery: "Alishan National Forest Recreation Area" },
+                    { time: "18:30", title: "阿里山賓館晚餐", desc: "享用高山特色晚餐與暖心鍋物", tag: "🍲 美食", tagColor: "bg-coral", isMust: false, mapQuery: "Alishan House" }
+                ]
+            },
+            3: {
+                date: "11月6日 (星期五)",
+                title: "Day 3：日出雲海與高山茶",
+                items: [
+                    { time: "05:30", title: "祝山觀日出", desc: "搭乘阿里山小火車觀賞日出與壯麗雲海", tag: "🚂 小火車", tagColor: "bg-sky", isMust: true, mapQuery: "祝山觀日出" },
+                    { time: "08:00", title: "飯店早餐與森林漫步", desc: "享受高山早晨清新空氣", tag: "☕ 休息", tagColor: "bg-yellow", isMust: false, mapQuery: "Alishan House" },
+                    { time: "11:00", title: "奮起湖老街", desc: "自駕前往奮起湖，品嚐鐵道便當與愛玉", tag: "🍱 美食", tagColor: "bg-coral", isMust: true, mapQuery: "Fenqihu Old Street" },
+                    { time: "15:00", title: "高山茶園品茗體驗", desc: "拜訪茶農，品嚐正宗阿里山烏龍茶", tag: "🍵 體驗", tagColor: "bg-green", isMust: false, mapQuery: "阿里山茶園" }
+                ]
+            },
+            4: {
+                date: "11月7日 (星期六)",
+                title: "Day 4：歡樂購物與人氣打卡",
+                items: [
+                    { time: "09:30", title: "返回台北市區", desc: "自駕北返，沿途欣賞風光", tag: "🚗 自駕", tagColor: "bg-yellow", isMust: false, mapQuery: "台北車站" },
+                    { time: "14:00", title: "台北101觀景台 & 購物", desc: "登高俯瞰台北市景，名品伴手禮大採購", tag: "🛍️ 購物", tagColor: "bg-coral", isMust: true, mapQuery: "Taipei 101" },
+                    { time: "18:30", title: "家族聚餐慶功宴", desc: "享用精緻台菜或特色海鮮料理", tag: "🍲 美食", tagColor: "bg-green", isMust: true, mapQuery: "台北餐廳" }
+                ]
+            },
+            5: {
+                date: "11月8日 (星期日)",
+                title: "Day 5：依依不舍返港",
+                items: [
+                    { time: "09:30", title: "最後衝刺買手信", desc: "採買鳳梨酥、牛軋糖等伴手禮", tag: "🛍️ 購物", tagColor: "bg-yellow", isMust: true, mapQuery: "台北伴手禮" },
+                    { time: "14:00", title: "桃園機場還車", desc: "辦理租車歸還手續，前往航廈", tag: "🚗 自駕", tagColor: "bg-sky", isMust: false, mapQuery: "桃園機場" },
+                    { time: "18:30", title: "搭機返港 (HX 283)", desc: "平安快樂賦歸，圓滿結束馮氏台灣遊！", tag: "✈️ 航班", tagColor: "bg-coral", isMust: false, mapQuery: "Taiwan Taoyuan International Airport" }
+                ]
+            }
+        };
+
+        function switchDay(day) {
+            // 更新按鈕樣式
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById(`tab-${i}`);
+                if (i === day) {
+                    btn.className = "py-2 bg-coral ehon-btn active transition-all";
+                } else {
+                    btn.className = "py-2 bg-paper ehon-btn transition-all";
+                }
+            }
+
+            // 渲染對應行程
+            const data = scheduleData[day];
+            const container = document.getElementById('schedule-content');
+            
+            let html = `
+                <div class="ehon-card p-4 bg-paper mb-3">
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="text-base font-bold text-ink">${data.title}</h2>
+                        <span class="text-xs bg-yellow px-2 py-0.5 rounded border border-ink font-bold">${data.date}</span>
+                    </div>
+                    <p class="text-xs text-ink/70">點擊景點名稱可直接開啟 Google Map 導航</p>
+                </div>
+                <div class="space-y-3">
+            `;
+
+            data.items.forEach(item => {
+                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.mapQuery)}`;
+                html.append ? '' : ''; // placeholder
+                html += `
+                    <div class="ehon-card p-3.5 bg-white flex items-start gap-3">
+                        <div class="bg-sky/30 text-ink px-2.5 py-1.5 rounded-xl text-center font-bold min-w-[54px] border-2 border-ink text-xs">
+                            ${item.time}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <a href="${mapUrl}" target="_blank" class="font-bold text-sm text-ink hover:text-coral underline decoration-2 decoration-coral">
+                                    📍 ${item.title} ↗
+                                </a>
+                                <span class="${item.tagColor} px-2 py-0.5 rounded text-[10px] font-bold border border-ink">${item.tag}</span>
+                                ${item.isMust ? '<span class="bg-coral text-white px-1.5 py-0.5 rounded text-[10px] font-bold border border-ink">🔥 必去</span>' : ''}
+                            </div>
+                            <p class="text-xs text-ink/70 mt-1">${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+            
+            // 觸發重新動畫
+            container.classList.remove('animate-tab');
+            void container.offsetWidth;
+            container.classList.add('animate-tab');
+        }
+
+        // 預設載入 Day 1
+        switchDay(1);
+    </script>
+</body>
+</html>

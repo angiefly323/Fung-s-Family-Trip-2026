@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>馮氏台灣遊 2026 - 照片集與素材牆</title>
+    <!-- 引入 Google Fonts: Huninn (jf open 粉圓體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+Hei+HK:wght@450&family=jf+open+huninn&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#FFFCF6',
+                        ink: '#3E3A39',
+                        coral: '#F2A497',
+                        yellow: '#F6D27A',
+                        sky: '#A8D3E6',
+                        green: '#B9DAA5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'jf open huninn', 'Chiron Hei HK', sans-serif;
+            background-color: #FFFCF6;
+            color: #3E3A39;
+        }
+
+        /* 3px 墨灰粗線框 + 大圓角 */
+        .ehon-card {
+            background-color: #FFFFFF;
+            border: 3px solid #3E3A39;
+            border-radius: 20px;
+            box-shadow: 4px 4px 0px #3E3A39;
+        }
+
+        .ehon-btn {
+            border: 3px solid #3E3A39;
+            border-radius: 16px;
+            box-shadow: 3px 3px 0px #3E3A39;
+            transition: all 0.1s ease;
+        }
+        .ehon-btn:active, .ehon-btn.active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #3E3A39;
+        }
+
+        /* 減少動態效果支援 */
+        @media (prefers-reduced-motion: reduce) {
+            .ehon-btn {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body class="pb-28">
+
+    <!-- 頂端固定選單 (Top Navbar) -->
+    <nav class="sticky top-0 z-50 bg-[#FFFCF6]/95 backdrop-blur-sm border-b-3 border-[#3E3A39] px-4 py-3">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <span class="font-bold text-base tracking-wider bg-green px-3 py-1 ehon-btn text-xs">
+                📸 照片集與素材牆
+            </span>
+            <div class="flex gap-2 text-xs font-bold">
+                <a href="index.html" class="px-2.5 py-1 bg-paper ehon-btn opacity-70 hover:opacity-100">首頁</a>
+                <a href="schedule.html" class="px-2.5 py-1 bg-sky ehon-btn opacity-70 hover:opacity-100">行程</a>
+                <a href="photos.html" class="px-2.5 py-1 bg-green ehon-btn">照片</a>
+                <a href="expenses.html" class="px-2.5 py-1 bg-yellow ehon-btn text-ink opacity-70 hover:opacity-100">記帳</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
+
+        <!-- 1. 隨手上傳區塊 -->
+        <section class="ehon-card p-4 bg-green/20">
+            <h2 class="text-sm font-bold flex items-center gap-1.5 mb-2 text-ink">
+                <span>📤</span> 隨手上傳當日照片/影片
+            </h2>
+            <p class="text-xs text-ink/70 mb-3">隨時上傳靚相靚片，旅程結束後直接剪成精彩回顧！</p>
+            
+            <form onsubmit="handleUpload(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">選擇日期</label>
+                    <select id="upload-day" class="w-full p-2 bg-paper ehon-btn outline-none font-bold">
+                        <option value="Day 1">Day 1 (11/4) 抵台與市區探索</option>
+                        <option value="Day 2">Day 2 (11/5) 出發阿里山仙境</option>
+                        <option value="Day 3">Day 3 (11/6) 日出雲海與高山茶</option>
+                        <option value="Day 4">Day 4 (11/7) 歡樂購物與打卡</option>
+                        <option value="Day 5">Day 5 (11/8) 依依不舍返港</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1">上傳者</label>
+                    <select id="upload-uploader" class="w-full p-2 bg-paper ehon-btn outline-none font-bold">
+                        <option value="偉業">偉業</option>
+                        <option value="三嫂">三嫂</option>
+                        <option value="偉強">偉強</option>
+                        <option value="寶寶">寶寶</option>
+                        <option value="美麗大姐">美麗大家姐</option>
+                        <option value="可愛二姐">可愛二家姐</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1">選擇檔案 (照片/短片)</label>
+                    <input type="file" id="upload-file" multiple accept="image/*,video/*" class="w-full p-2 bg-paper ehon-btn text-xs file:mr-4 file:py-1 file:px-3 file:rounded-xl file:border-2 file:border-ink file:text-xs file:font-bold file:bg-coral file:text-ink cursor-pointer">
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-coral font-bold ehon-btn text-center text-sm shadow-md">
+                    ✨ 立即上傳到雲端素材庫
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. 剪接師專用打包下載區 -->
+        <section class="ehon-card p-4 bg-yellow/20 border-2 border-ink">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-sm font-bold flex items-center gap-1.5 text-ink">
+                    <span>🎬</span> 剪接師專用・原畫質打包
+                </h2>
+                <span class="bg-coral text-[10px] px-2 py-0.5 rounded border border-ink font-bold">Pro 專區</span>
+            </div>
+            <p class="text-xs text-ink/70 mb-3">一鍵打包下載原畫質素材，剪片唔洗逐張save！</p>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="alert('正在打包下載全部原畫質素材 (ZIP格式)...')" class="py-2 px-3 bg-paper ehon-btn font-bold text-xs text-center flex items-center justify-center gap-1">
+                    <span>📦</span> 下載全部素材
+                </button>
+                <button onclick="alert('已複製所有雲端素材高解析連結！')" class="py-2 px-3 bg-sky ehon-btn font-bold text-xs text-center flex items-center justify-center gap-1">
+                    <span>🔗</span> 複製雲端資料夾
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. 照片牆與回顧瀏覽 -->
+        <section class="ehon-card p-4 bg-paper">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-sm font-bold flex items-center gap-1.5 text-ink">
+                    <span>🖼️</span> 精彩回顧牆
+                </h2>
+                <!-- 日期篩選 -->
+                <select onchange="filterPhotos(this.value)" class="text-xs p-1 bg-sky ehon-btn font-bold outline-none">
+                    <option value="all">全部日期</option>
+                    <option value="Day 1">Day 1</option>
+                    <option value="Day 2">Day 2</option>
+                    <option value="Day 3">Day 3</option>
+                    <option value="Day 4">Day 4</option>
+                    <option value="Day 5">Day 5</option>
+                </select>
+            </div>
+
+            <!-- 照片網格模擬 -->
+            <div id="photo-grid" class="grid grid-cols-2 gap-3 text-xs">
+                <!-- 範例照片卡片 1 -->
+                <div class="bg-white ehon-card p-2 overflow-hidden photo-item" data-day="Day 1">
+                    <div class="w-full h-28 bg-sky/30 rounded-xl flex items-center justify-center text-2xl border-2 border-ink mb-2">
+                        🍲
+                    </div>
+                    <p class="font-bold truncate">永康街牛肉麵</p>
+                    <div class="flex justify-between items-center mt-1 text-[10px] text-ink/60">
+                        <span>👤 偉業</span>
+                        <span class="bg-sky px-1 rounded border border-ink">Day 1</span>
+                    </div>
+                </div>
+
+                <!-- 範例照片卡片 2 -->
+                <div class="bg-white ehon-card p-2 overflow-hidden photo-item" data-day="Day 2">
+                    <div class="w-full h-28 bg-green/30 rounded-xl flex items-center justify-center text-2xl border-2 border-ink mb-2">
+                        ⛰️
+                    </div>
+                    <p class="font-bold truncate">阿里山神木群</p>
+                    <div class="flex justify-between items-center mt-1 text-[10px] text-ink/60">
+                        <span>👤 三嫂</span>
+                        <span class="bg-green px-1 rounded border border-ink">Day 2</span>
+                    </div>
+                </div>
+
+                <!-- 範例照片卡片 3 -->
+                <div class="bg-white ehon-card p-2 overflow-hidden photo-item" data-day="Day 3">
+                    <div class="w-full h-28 bg-yellow/30 rounded-xl flex items-center justify-center text-2xl border-2 border-ink mb-2">
+                        🚂
+                    </div>
+                    <p class="font-bold truncate">祝山觀日出小火車</p>
+                    <div class="flex justify-between items-center mt-1 text-[10px] text-ink/60">
+                        <span>👤 寶寶</span>
+                        <span class="bg-yellow px-1 rounded border border-ink">Day 3</span>
+                    </div>
+                </div>
+
+                <!-- 範例照片卡片 4 -->
+                <div class="bg-white ehon-card p-2 overflow-hidden photo-item" data-day="Day 4">
+                    <div class="w-full h-28 bg-coral/30 rounded-xl flex items-center justify-center text-2xl border-2 border-ink mb-2">
+                        🛍️
+                    </div>
+                    <p class="font-bold truncate">台北101合影</p>
+                    <div class="flex justify-between items-center mt-1 text-[10px] text-ink/60">
+                        <span>👤 偉強</span>
+                        <span class="bg-coral px-1 rounded border border-ink">Day 4</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 底部導覽列 (Directory) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#FFFCF6] border-t-3 border-[#3E3A39] py-2 px-6 z-50">
+        <div class="max-w-md mx-auto flex justify-between items-center text-xs font-bold">
+            <a href="index.html" class="flex flex-col items-center p-1 hover:bg-coral/50 ehon-btn px-4">
+                <span>🏠</span>
+                <span class="mt-0.5">首頁</span>
+            </a>
+            <a href="schedule.html" class="flex flex-col items-center p-1 hover:bg-sky/50 ehon-btn px-4">
+                <span>🗺️</span>
+                <span class="mt-0.5">行程</span>
+            </a>
+            <a href="photos.html" class="flex flex-col items-center p-1 bg-green ehon-btn px-4">
+                <span>📸</span>
+                <span class="mt-0.5">照片集</span>
+            </a>
+            <a href="expenses.html" class="flex flex-col items-center p-1 hover:bg-yellow/50 ehon-btn px-4">
+                <span>💰</span>
+                <span class="mt-0.5">支出紀錄</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 互動 JavaScript 邏輯 -->
+    <script>
+        function handleUpload(event) {
+            event.preventDefault();
+            const day = document.getElementById('upload-day').value;
+            const uploader = document.getElementById('upload-uploader').value;
+            const fileInput = document.getElementById('upload-file');
+            
+            if (fileInput.files.length === 0) {
+                alert('請先選擇至少一張照片或影片！');
+                return;
+            }
+
+            alert(`成功！已將 ${fileInput.files.length} 個檔案上傳至 [${day}]（上傳者：${uploader}）。稍後將自動串接 Google Cloud Storage 儲存！`);
+            fileInput.value = '';
+        }
+
+        function filterPhotos(day) {
+            const items = document.querySelectorAll('.photo-item');
+            items.forEach(item => {
+                if (day === 'all' || item.getAttribute('data-day') === day) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
